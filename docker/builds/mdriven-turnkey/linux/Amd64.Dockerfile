@@ -19,6 +19,5 @@ RUN API_ENDPOINT="https://mdriven.net/Rest/ProductRelease/Get?vProduct=TurnkeyCo
     && unzip release.zip -d /app_temp \
     && rm release.zip
 
-
 COPY _shared/entrypoint.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/entrypoint.sh
