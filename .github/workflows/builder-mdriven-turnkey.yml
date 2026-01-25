@@ -31,6 +31,7 @@ jobs:
         name: Build and push Linux AMD64
         uses: docker/build-push-action@v6
         with:
+          context: ./docker/builds
           file: ./docker/builds/mdriven-turnkey/linux/Amd64.Dockerfile
           platforms: linux/amd64
           no-cache: true
@@ -57,6 +58,7 @@ jobs:
         name: Build and push Linux ARM64
         uses: docker/build-push-action@v6
         with:
+          context: ./docker/builds
           file: ./docker/builds/mdriven-turnkey/linux/Arm64.Dockerfile
           platforms: linux/arm64
           no-cache: true
@@ -83,6 +85,7 @@ jobs:
         name: Build and push Linux MUSL
         uses: docker/build-push-action@v6
         with:
+          context: ./docker/builds
           file: ./docker/builds/mdriven-turnkey/linux/Musl.Dockerfile
           no-cache: true
           push: true
