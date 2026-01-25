@@ -1,0 +1,94 @@
+name: MDriven
+
+services:
+  server-core:
+    platform: linux/arm64
+    build:
+      context: ../../builds
+      dockerfile: mdriven-server/linux/Arm64.Dockerfile
+
+    networks:
+      - app-net
+    volumes:
+      - type: volume
+        source: MDSData
+        target: /app
+
+      - type: bind
+        source: ./mdriven-server-settings/CommandLineOverride.xml
+        target: /app/App_Data/CommandLineOverride.xml
+    
+    ports:
+      - 5011:5011
+
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5011/"]
+      interval: 60s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
+    
+    restart: on-failure:5
+
+    entrypoint: ["/bin/sh","/usr/local/bin/entrypoint.sh"]
+
+    command: ["dotnet", "AppCompleteGenericCore.dll"]
+
+
+  turnkey-core:
+    platform: linux/arm64
+    build:
+      context: ../../builds
+      dockerfile: mdriven-turnkey/linux/Arm64.Dockerfile
+    networks:
+      - app-net
+    volumes:
+      - type: volume
+        source: MDTData
+        target: /app
+
+      - type: bind
+        source: ./mdriven-turnkey-settings/CommandLineOverride.xml
+        target: /app/App_Data/CommandLineOverride.xml
+      
+      - type: bind
+        source: ./mdriven-turnkey-settings/HardServerUrl.xml
+        target: /app/App_Data/HardServerUrl.xml
+      
+      - type: bind
+        source: ./mdriven-turnkey-settings/MDrivenServerOverride.xml
+        target: /app/App_Data/MDrivenServerOverride.xml
+      
+      - type: bind
+        source: ./mdriven-turnkey-settings/TurnkeySettingsOverride.xml
+        target: /app/App_Data/TurnkeySettingsOverride.xml
+    
+    ports:
+      - 5012:5012
+    
+    depends_on:
+      server-core:
+        condition: service_healthy
+        restart: true
+
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5012/"]
+      interval: 60s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
+    
+    restart: on-failure:5
+
+    entrypoint: ["/bin/sh","/usr/local/bin/entrypoint.sh"]
+
+    command: ["dotnet", "StreaminAppCoreWebApp.dll"]
+
+
+volumes:
+  MDSData:
+  MDTData:
+
+networks:
+  app-net:
+
