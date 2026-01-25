@@ -27,6 +27,13 @@ jobs:
       -
         name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
+      - 
+        name: List Files
+        run: |
+          echo "Listing root files:"
+          ls -la
+          echo "Listing subdirectories (recursive):"
+          ls -R
       -
         name: Build and push Linux AMD64
         uses: docker/build-push-action@v6
