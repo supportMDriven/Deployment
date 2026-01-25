@@ -25,3 +25,4 @@ RUN dotnet nuget add source /mnt/c/capableobjectswush/Xternal/VistaDB --name  Xt
 
 COPY _shared/entrypoint.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/entrypoint.sh
+
