@@ -31,7 +31,7 @@ jobs:
         name: Build and push Linux AMD64
         uses: docker/build-push-action@v6
         with:
-          file: ./builds/mdriven-server/linux/Amd64.Dockerfile
+          file: ./docker/builds/mdriven-server/linux/Amd64.Dockerfile
           platforms: linux/amd64
           no-cache: true
           push: true
@@ -57,7 +57,7 @@ jobs:
         name: Build and push Linux ARM64
         uses: docker/build-push-action@v6
         with:
-          file: ./builds/mdriven-server/linux/Arm64.Dockerfile
+          file: ./docker/builds/mdriven-server/linux/Arm64.Dockerfile
           platforms: linux/arm64
           no-cache: true
           push: true
@@ -83,7 +83,7 @@ jobs:
         name: Build and push Linux MUSL
         uses: docker/build-push-action@v6
         with:
-          file: ./builds/mdriven-server/linux/Musl.Dockerfile
+          file: ./docker/builds/mdriven-server/linux/Musl.Dockerfile
           no-cache: true
           push: true
           tags: ${{env.IMAGE_NAME}}:musl
