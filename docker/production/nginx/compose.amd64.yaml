@@ -3,10 +3,7 @@ name: MDriven
 services:
   server-core:
     platform: linux/amd64
-    build:
-      context: ../../builds
-      dockerfile: mdriven-server/linux/Amd64.Dockerfile
-
+    image: mdriven/mdriven-server:latest
     
     volumes:
       - type: volume
@@ -16,10 +13,11 @@ services:
       - type: bind
         source: ./mdriven-server-settings/CommandLineOverride.xml
         target: /app/App_Data/CommandLineOverride.xml
+      
+      - type: bind
+        source: ./mdriven-server-settings/DatabaseVistaDB.vdb6
+        target: /app/App_Data/DatabaseVistaDB.vdb6
     
-    ports:
-      - 5011:5011
-
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:5011/"]
       interval: 60s
@@ -36,10 +34,8 @@ services:
 
   turnkey-core:
     platform: linux/amd64
-    build:
-      context: ../../builds
-      dockerfile: mdriven-turnkey/linux/Amd64.Dockerfile
-    
+    image: mdriven/mdriven-turnkey:latest
+
     volumes:
       - type: volume
         source: MDTData
@@ -60,9 +56,6 @@ services:
       - type: bind
         source: ./mdriven-turnkey-settings/TurnkeySettingsOverride.xml
         target: /app/App_Data/TurnkeySettingsOverride.xml
-    
-    ports:
-      - 5012:5012
     
     depends_on:
       server-core:
@@ -90,6 +83,15 @@ services:
       - type: bind
         source: ./proxy.conf
         target: /etc/nginx/conf.d/default.conf
+
+    depends_on:
+      turnkey-core:
+        condition: service_healthy
+        restart: true
+    
+    ports:
+      - 5011:5011
+      - 5012:5012
 
 volumes:
   MDSData:

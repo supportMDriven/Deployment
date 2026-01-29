@@ -3,12 +3,11 @@ name: MDriven
 services:
   server-core:
     platform: linux/arm64
-    build:
-      context: ../../builds
-      dockerfile: mdriven-server/linux/Arm64.Dockerfile
+    image: mdriven/mdriven-server:latest
 
     networks:
       - app-net
+    
     volumes:
       - type: volume
         source: MDSData
@@ -17,6 +16,10 @@ services:
       - type: bind
         source: ./mdriven-server-settings/CommandLineOverride.xml
         target: /app/App_Data/CommandLineOverride.xml
+      
+      - type: bind
+        source: ./mdriven-server-settings/DatabaseVistaDB.vdb6
+        target: /app/App_Data/DatabaseVistaDB.vdb6
     
     ports:
       - 5011:5011
@@ -37,11 +40,11 @@ services:
 
   turnkey-core:
     platform: linux/arm64
-    build:
-      context: ../../builds
-      dockerfile: mdriven-turnkey/linux/Arm64.Dockerfile
+    image: mdriven/mdriven-turnkey:latest
+
     networks:
       - app-net
+    
     volumes:
       - type: volume
         source: MDTData
