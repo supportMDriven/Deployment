@@ -48,19 +48,25 @@ jobs:
           ENV_NAME="${{ matrix.name }}"
           
           COMPOSE_FILE="compose.${ARCH}.yaml"
-          # Zip Name: e.g., "deploy-prod-amd64.zip" or "deploy-local-arm64.zip"
           ZIP_NAME="deploy-${ENV_NAME}-${ARCH}.zip"
           TEMP_DIR="package_temp"
 
           # 2. Setup Temp Directory
           mkdir $TEMP_DIR
 
-          # 3. Copy Settings (Assuming both paths have these folders)
+          # 3. Copy Settings folders
           echo "Copying settings from $BASE_PATH..."
           cp -r "$BASE_PATH/mdriven-server-settings" "$TEMP_DIR/"
           cp -r "$BASE_PATH/mdriven-turnkey-settings" "$TEMP_DIR/"
 
-          # 4. Copy Specific Compose File
+          # 4. Copy Proxy Config (Specific to Production)
+          # We check if the file exists first, so this won't break the 'local' builds
+          if [ -f "$BASE_PATH/proxy.conf" ]; then
+             echo "Found proxy.conf, including it..."
+             cp "$BASE_PATH/proxy.conf" "$TEMP_DIR/"
+          fi
+
+          # 5. Copy and Rename Specific Compose File
           if [ -f "$BASE_PATH/$COMPOSE_FILE" ]; then
             echo "Copying $COMPOSE_FILE..."
             cp "$BASE_PATH/$COMPOSE_FILE" "$TEMP_DIR/compose.yaml"
@@ -69,7 +75,7 @@ jobs:
             exit 1
           fi
 
-          # 5. Zip it up
+          # 6. Zip it up
           cd $TEMP_DIR
           zip -r "../$ZIP_NAME" .
           cd ..
