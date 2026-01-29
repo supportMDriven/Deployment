@@ -1,0 +1,102 @@
+name: Package & Publish Docker Configs
+
+on:
+  push:
+    branches: [ "main" ]
+
+permissions:
+  contents: write # Required for creating releases
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      # We create a cross-product: 2 Environments x 3 Architectures = 6 Jobs
+      matrix:
+        include:
+          # Production Setups
+          - name: prod
+            path: docker/production/nginx
+            arch: amd64
+          - name: prod
+            path: docker/production/nginx
+            arch: arm64
+          - name: prod
+            path: docker/production/nginx
+            arch: musl
+          
+          # Local Setups
+          - name: local
+            path: docker/local/linux
+            arch: amd64
+          - name: local
+            path: docker/local/linux
+            arch: arm64
+          - name: local
+            path: docker/local/linux
+            arch: musl
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Prepare and Zip Files
+        run: |
+          # 1. Set variables from Matrix
+          BASE_PATH="${{ matrix.path }}"
+          ARCH="${{ matrix.arch }}"
+          ENV_NAME="${{ matrix.name }}"
+          
+          COMPOSE_FILE="compose.${ARCH}.yaml"
+          # Zip Name: e.g., "deploy-prod-amd64.zip" or "deploy-local-arm64.zip"
+          ZIP_NAME="deploy-${ENV_NAME}-${ARCH}.zip"
+          TEMP_DIR="package_temp"
+
+          # 2. Setup Temp Directory
+          mkdir $TEMP_DIR
+
+          # 3. Copy Settings (Assuming both paths have these folders)
+          echo "Copying settings from $BASE_PATH..."
+          cp -r "$BASE_PATH/mdriven-server-settings" "$TEMP_DIR/"
+          cp -r "$BASE_PATH/mdriven-turnkey-settings" "$TEMP_DIR/"
+
+          # 4. Copy Specific Compose File
+          if [ -f "$BASE_PATH/$COMPOSE_FILE" ]; then
+            echo "Copying $COMPOSE_FILE..."
+            cp "$BASE_PATH/$COMPOSE_FILE" "$TEMP_DIR/compose.yaml"
+          else
+            echo "::error::File $BASE_PATH/$COMPOSE_FILE not found!"
+            exit 1
+          fi
+
+          # 5. Zip it up
+          cd $TEMP_DIR
+          zip -r "../$ZIP_NAME" .
+          cd ..
+
+      - name: Upload Temp Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          # Unique artifact name for GitHub UI
+          name: package-${{ matrix.name }}-${{ matrix.arch }}
+          path: deploy-${{ matrix.name }}-${{ matrix.arch }}.zip
+          retention-days: 1
+
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download All Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: package-* # Matches all 6 artifacts
+          merge-multiple: true # Dumps all 6 zips into one folder
+          path: ./release_assets
+
+      - name: Update Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: latest-configs
+          name: "Latest Docker Configurations"
+          files: release_assets/*.zip
+          prerelease: false
