@@ -1,0 +1,7 @@
+# Ignore the actual database files on the host
+mysql-data/
+postgres-data/
+mssql-data/
+
+# Ignore local environment config
+.env
