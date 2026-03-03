@@ -5,13 +5,14 @@ on:
     branches:
       - "main"
     paths:
-      - "**.Dockerfile"
+      - "docker/builds/mdriven-server/**"
 
 env:
   IMAGE_NAME: ${{vars.DOCKERHUB_USERNAME}}/mdriven-server
 
 jobs:
-  build-linux-amd64:
+  # --- UBUNTU ---
+  build-ubuntu-amd64:
     runs-on: ubuntu-latest
     
     steps:
@@ -28,17 +29,19 @@ jobs:
         name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
       -
-        name: Build and push Linux AMD64
+        name: Build and push Ubuntu AMD64
         uses: docker/build-push-action@v6
         with:
-          context: "{{defaultContext}}:docker/builds"
-          file: mdriven-server/linux/Amd64.Dockerfile
+          context: "{{defaultContext}}:docker/builds/mdriven-server/ubuntu"
+          file: Amd64.Dockerfile
           platforms: linux/amd64
           no-cache: true
           push: true
-          tags: ${{env.IMAGE_NAME}}:linux-amd64
+          tags: |
+            ${{env.IMAGE_NAME}}:ubuntu-amd64
+            ${{env.IMAGE_NAME}}:amd64
 
-  build-linux-arm64:
+  build-ubuntu-arm64:
     runs-on: ubuntu-latest
     
     steps:
@@ -55,17 +58,20 @@ jobs:
         name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
       -
-        name: Build and push Linux ARM64
+        name: Build and push Ubuntu ARM64
         uses: docker/build-push-action@v6
         with:
-          context: "{{defaultContext}}:docker/builds"
-          file: mdriven-server/linux/Arm64.Dockerfile
+          context: "{{defaultContext}}:docker/builds/mdriven-server/ubuntu"
+          file: Arm64.Dockerfile
           platforms: linux/arm64
           no-cache: true
           push: true
-          tags: ${{env.IMAGE_NAME}}:linux-arm64
-            
-  build-linux-musl:
+          tags: |
+            ${{env.IMAGE_NAME}}:ubuntu-arm64
+            ${{env.IMAGE_NAME}}:arm64
+  
+  # --- DEBIAN ---
+  build-debian-amd64:
     runs-on: ubuntu-latest
     
     steps:
@@ -82,18 +88,76 @@ jobs:
         name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
       -
-        name: Build and push Linux MUSL
+        name: Build and push Debian AMD64
         uses: docker/build-push-action@v6
         with:
-          context: "{{defaultContext}}:docker/builds"
-          file: mdriven-server/linux/Musl.Dockerfile
+          context: "{{defaultContext}}:docker/builds/mdriven-server/debian"
+          file: Amd64.Dockerfile
+          platforms: linux/amd64
           no-cache: true
           push: true
-          tags: ${{env.IMAGE_NAME}}:musl
-      
-            
+          tags: ${{env.IMAGE_NAME}}:debian-amd64
+
+  build-debian-arm64:
+    runs-on: ubuntu-latest
+    
+    steps:
+      -
+        name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{vars.DOCKERHUB_USERNAME}}
+          password: ${{secrets.DOCKERHUB_TOKEN}}
+      -
+        name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      -
+        name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      -
+        name: Build and push Debian ARM64
+        uses: docker/build-push-action@v6
+        with:
+          context: "{{defaultContext}}:docker/builds/mdriven-server/debian"
+          file: Arm64.Dockerfile
+          platforms: linux/arm64
+          no-cache: true
+          push: true
+          tags: ${{env.IMAGE_NAME}}:debian-arm64
+  
+  # --- ALPINE ---
+  build-alpine-amd64:
+    runs-on: ubuntu-latest
+    
+    steps:
+      -
+        name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{vars.DOCKERHUB_USERNAME}}
+          password: ${{secrets.DOCKERHUB_TOKEN}}
+      -
+        name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      -
+        name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      -
+        name: Build and push Alpine AMD64
+        uses: docker/build-push-action@v6
+        with:
+          context: "{{defaultContext}}:docker/builds/mdriven-server/alpine"
+          file: Amd64.Dockerfile
+          platforms: linux/amd64
+          no-cache: true
+          push: true
+          tags: |
+            ${{env.IMAGE_NAME}}:alpine-amd64
+            ${{env.IMAGE_NAME}}:musl
+  
+  # --- MANIFEST ---
   create-manifest:
-    needs: [build-linux-amd64, build-linux-arm64]
+    needs: [build-ubuntu-amd64, build-ubuntu-arm64]
     runs-on: ubuntu-latest
 
     steps:
@@ -104,11 +168,11 @@ jobs:
           username: ${{vars.DOCKERHUB_USERNAME}}
           password: ${{secrets.DOCKERHUB_TOKEN}}
       -
-        name: Create and Push Manifest
+        name: Create and Push 'latest' Manifest
         run: |
           docker buildx imagetools create -t ${{ env.IMAGE_NAME }}:latest \
-            ${{ env.IMAGE_NAME }}:linux-amd64 \
-            ${{ env.IMAGE_NAME }}:linux-arm64 
+            ${{ env.IMAGE_NAME }}:ubuntu-amd64 \
+            ${{ env.IMAGE_NAME }}:ubuntu-arm64 
       
 
 

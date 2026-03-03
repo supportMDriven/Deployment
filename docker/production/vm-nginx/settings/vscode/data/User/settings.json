@@ -1,0 +1,10 @@
+{
+    "workbench.startupEditor": "none",
+    "chat.agent.enabled": false,
+    "chat.commandCenter.enabled": false,
+    "chat.extensionTools.enabled": false,
+    "chat.editor.temporalContext.enabled": false,
+    "github.copilot.enable": {
+        "*": false
+    }
+}

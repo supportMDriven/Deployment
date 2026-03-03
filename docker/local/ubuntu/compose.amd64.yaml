@@ -1,0 +1,97 @@
+name: MDriven
+
+services:
+  server-core:
+    platform: linux/amd64
+    image: mdriven/mdriven-server:ubuntu-amd64
+
+    networks:
+      - app-net
+    
+    volumes:
+      - type: volume
+        source: MDSData
+        target: /app
+
+      - type: bind
+        source: ${SETTINGS_PATH:-.}/settings/mdriven-server/CommandLineOverride.xml
+        target: /app/App_Data/CommandLineOverride.xml
+      
+      - type: bind
+        source: ${SETTINGS_PATH:-.}/settings/mdriven-server/DatabaseVistaDB.vdb6
+        target: /app/App_Data/DatabaseVistaDB.vdb6
+    
+    ports:
+      - 5011:5011
+
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5011/"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+    
+    restart: on-failure:5
+
+    entrypoint: ["/bin/sh","/usr/local/bin/entrypoint.sh"]
+
+    command: ["dotnet", "AppCompleteGenericCore.dll"]
+
+
+  turnkey-core:
+    platform: linux/amd64
+    image: mdriven/mdriven-turnkey:ubuntu-amd64
+    
+    networks:
+      - app-net
+    
+    volumes:
+      - type: volume
+        source: MDTData
+        target: /app
+
+      - type: bind
+        source: ${SETTINGS_PATH:-.}/settings/mdriven-turnkey/CommandLineOverride.xml
+        target: /app/App_Data/CommandLineOverride.xml
+      
+      - type: bind
+        source: ${SETTINGS_PATH:-.}/settings/mdriven-turnkey/HardServerUrl.xml
+        target: /app/App_Data/HardServerUrl.xml
+      
+      - type: bind
+        source: ${SETTINGS_PATH:-.}/settings/mdriven-turnkey/MDrivenServerOverride.xml
+        target: /app/App_Data/MDrivenServerOverride.xml
+      
+      - type: bind
+        source: ${SETTINGS_PATH:-.}/settings/mdriven-turnkey/TurnkeySettingsOverride.xml
+        target: /app/App_Data/TurnkeySettingsOverride.xml
+    
+    ports:
+      - 5012:5012
+    
+    depends_on:
+      server-core:
+        condition: service_healthy
+        restart: true
+
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5012/"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+    
+    restart: on-failure:5
+
+    entrypoint: ["/bin/sh","/usr/local/bin/entrypoint.sh"]
+
+    command: ["dotnet", "StreaminAppCoreWebApp.dll"]
+
+
+volumes:
+  MDSData:
+  MDTData:
+
+networks:
+  app-net:
+

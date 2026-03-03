@@ -1,0 +1,2 @@
+CREATE DATABASE mdriven_db OWNER mdriven;
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";

@@ -5,3 +5,6 @@ mssql-data/
 
 # Ignore local environment config
 .env
+
+# Ignore socket files
+*.sock
