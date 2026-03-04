@@ -6,7 +6,8 @@ RUN apk add --upgrade --no-cache \
         curl \
         unzip \
         jq \
-        musl-locales
+        musl-locales \
+        su-exec
 
 ENV LANG=en_US.UTF-8
 ENV LANGUAGE=en_US:en 

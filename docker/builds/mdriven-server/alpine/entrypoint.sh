@@ -69,7 +69,7 @@ if [ -n "$PUID" ] && [ -n "$PGID" ]; then
     
     # Execute the app by dropping privileges to the specified UID/GID
     echo "Starting application..."
-    exec setpriv --reuid="$PUID" --regid="$PGID" --clear-groups "$@"
+    exec su-exec 1000:1000 "$@"
 
 else
     # 3. If the variables are missing, skip chown and run normally (as Root)
