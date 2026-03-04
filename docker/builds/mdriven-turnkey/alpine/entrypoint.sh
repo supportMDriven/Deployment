@@ -37,7 +37,7 @@ if [ -n "$UPDATE_APP" ] && [ "$UPDATE_APP" != "false" ]; then
         curl -L -o /tmp/release.zip "$DOWNLOAD_URL"
         
         # Unzip into your newly created staging area and clean up the zip file
-        unzip -q /tmp/release.zip -d /app_temp
+        unzip -q -o  /tmp/release.zip -d /app_temp
         rm /tmp/release.zip
         
         echo "Download to staging complete!"
