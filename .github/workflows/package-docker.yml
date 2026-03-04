@@ -36,8 +36,8 @@ jobs:
             mkdir -p $TEMP_DIR
             cp -r "$LOCAL_ROOT/settings" "$TEMP_DIR/"
             
-            # Copy specific compose file as 'docker-compose.yml'
-            cp "$LOCAL_ROOT/$DISTRO/$COMPOSE_SRC" "$TEMP_DIR/docker-compose.yml"
+            # Copy specific compose file as 'docker-compose.yaml'
+            cp "$LOCAL_ROOT/$DISTRO/$COMPOSE_SRC" "$TEMP_DIR/docker-compose.yaml"
 
             cd $TEMP_DIR
             zip -r "../$ZIP_NAME" .
@@ -49,7 +49,7 @@ jobs:
           package_local "ubuntu" "arm64" "compose.arm64.yaml"
           package_local "debian" "amd64" "compose.amd64.yaml"
           package_local "debian" "arm64" "compose.arm64.yaml"
-          package_local "alpine" "amd64" "compose.yaml"
+          package_local "alpine" "amd64" "compose.amd64.yaml"
 
       - name: Upload Temp Artifact
         uses: actions/upload-artifact@v4
@@ -70,7 +70,7 @@ jobs:
           package_vm() {
             DISTRO=$1
             ARCH=$2
-            FILE_NAME="compose.prod.yml"
+            FILE_NAME="compose.prod.yaml"
             ZIP_NAME="deploy-vm-standard-${DISTRO}-${ARCH}.zip"
             TEMP_DIR="pkg_vm_std_${DISTRO}_${ARCH}"
             
@@ -79,7 +79,7 @@ jobs:
             cp -r "$VM_ROOT/settings" "$TEMP_DIR/"
 
             # Copy Compose File from: docker/production/vm-nginx/ubuntu/amd64/
-            cp "$VM_ROOT/$DISTRO/$ARCH/$FILE_NAME" "$TEMP_DIR/docker-compose.yml"
+            cp "$VM_ROOT/$DISTRO/$ARCH/$FILE_NAME" "$TEMP_DIR/docker-compose.yaml"
 
             cd $TEMP_DIR
             zip -r "../$ZIP_NAME" .
@@ -112,7 +112,7 @@ jobs:
           package_mysql() {
             DISTRO=$1
             ARCH=$2
-            FILE_NAME="compose.mysql.yml"
+            FILE_NAME="compose.mysql.yaml"
             ZIP_NAME="deploy-vm-mysql-${DISTRO}-${ARCH}.zip"
             TEMP_DIR="pkg_vm_mysql_${DISTRO}_${ARCH}"
             
@@ -124,7 +124,7 @@ jobs:
             mkdir -p $TEMP_DIR/databases
             cp -r $VM_ROOT/databases/mysql $TEMP_DIR/databases/
 
-            cp "$VM_ROOT/$DISTRO/$ARCH/$FILE_NAME" "$TEMP_DIR/docker-compose.yml"
+            cp "$VM_ROOT/$DISTRO/$ARCH/$FILE_NAME" "$TEMP_DIR/docker-compose.yaml"
 
             cd $TEMP_DIR
             zip -r "../$ZIP_NAME" .
@@ -157,7 +157,7 @@ jobs:
           package_pg() {
             DISTRO=$1
             ARCH=$2
-            FILE_NAME="compose.postgres.yml"
+            FILE_NAME="compose.postgres.yaml"
             ZIP_NAME="deploy-vm-postgres-${DISTRO}-${ARCH}.zip"
             TEMP_DIR="pkg_vm_pg_${DISTRO}_${ARCH}"
             
@@ -169,7 +169,7 @@ jobs:
             mkdir -p $TEMP_DIR/databases
             cp -r $VM_ROOT/databases/postgres $TEMP_DIR/databases/
 
-            cp "$VM_ROOT/$DISTRO/$ARCH/$FILE_NAME" "$TEMP_DIR/docker-compose.yml"
+            cp "$VM_ROOT/$DISTRO/$ARCH/$FILE_NAME" "$TEMP_DIR/docker-compose.yaml"
 
             cd $TEMP_DIR
             zip -r "../$ZIP_NAME" .
@@ -201,7 +201,7 @@ jobs:
           package_mssql() {
             DISTRO=$1
             ARCH=$2
-            FILE_NAME="compose.mssql.yml"
+            FILE_NAME="compose.mssql.yaml"
             ZIP_NAME="deploy-vm-mssql-${DISTRO}-${ARCH}.zip"
             TEMP_DIR="pkg_vm_mssql_${DISTRO}_${ARCH}"
             
@@ -213,7 +213,7 @@ jobs:
             mkdir -p $TEMP_DIR/databases
             cp -r $VM_ROOT/databases/mssql $TEMP_DIR/databases/
 
-            cp "$VM_ROOT/$DISTRO/$ARCH/$FILE_NAME" "$TEMP_DIR/docker-compose.yml"
+            cp "$VM_ROOT/$DISTRO/$ARCH/$FILE_NAME" "$TEMP_DIR/docker-compose.yaml"
 
             cd $TEMP_DIR
             zip -r "../$ZIP_NAME" .
