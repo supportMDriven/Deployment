@@ -135,7 +135,8 @@ services:
         source: MDTData
         target: /config/workspace/MDrivenTurnkey
         read_only: false
-
+    
+    ## Uncomment for stricter file manager and terminal permissions
     #   - type: bind
     #     source: ${PROJECT_ROOT:-.}/settings/vscode/.config
     #     target: /config/.config
