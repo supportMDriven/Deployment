@@ -1,6 +1,12 @@
 #!/bin/sh
 set -e
 
+# Check the currently installed version (if it exists)
+CURRENT_VERSION="none"
+if [ -f "/app/version.txt" ]; then
+    CURRENT_VERSION=$(cat /app/version.txt)
+fi
+
 echo "--- Checking for file updates ---"
 
 # ---------------------------------------------------------
@@ -32,15 +38,30 @@ if [ -n "$UPDATE_APP" ] && [ "$UPDATE_APP" != "false" ]; then
     if [ -z "$DOWNLOAD_URL" ] || [ "$DOWNLOAD_URL" = "null" ]; then
         echo "Error: Could not find a valid release URL. Skipping update."
     else
-        echo "Downloading from: $DOWNLOAD_URL"
-        # I changed the output path to /tmp/release.zip to keep the root directory clean
-        curl -L -o /tmp/release.zip "$DOWNLOAD_URL"
+        # 1c. Extract the exact version from the filename in the URL
+        # e.g., converts "http://.../ServerCore_20260316.zip" to "20260316"
+        FILENAME=$(basename "$DOWNLOAD_URL")
+        TARGET_VERSION=$(echo "$FILENAME" | sed -E 's/^.*_//; s/\.zip$//')
+
+        # 1d. Compare versions to decide if we need to download
+        if [ "$TARGET_VERSION" = "$CURRENT_VERSION" ]; then
+            echo "Version $TARGET_VERSION is already installed. Skipping download."
+        else
+            echo "Updating from $CURRENT_VERSION to $TARGET_VERSION..."
         
-        # Unzip into your newly created staging area and clean up the zip file
-        unzip -q -o  /tmp/release.zip -d /app_temp
-        rm /tmp/release.zip
-        
-        echo "Download to staging complete!"
+            echo "Downloading from: $DOWNLOAD_URL"
+            # Set the output path to /tmp/release.zip to keep the root directory clean
+            curl -L -o /tmp/release.zip "$DOWNLOAD_URL"
+            
+            # Unzip into your newly created staging area and clean up the zip file
+            unzip -q -o  /tmp/release.zip -d /app_temp
+            rm /tmp/release.zip
+
+            # SAVE THE NEW VERSION: Write it to the staging area so it syncs to /app
+            echo "$TARGET_VERSION" > /app_temp/version.txt
+            
+            echo "Download to staging complete!"
+        fi
     fi
 fi
 # ---------------------------------------------------------

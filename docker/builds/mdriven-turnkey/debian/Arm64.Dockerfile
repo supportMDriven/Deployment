@@ -8,7 +8,14 @@ RUN apt-get update \
         unzip \
         jq \
         ca-certificates \
+        locales \
+    && sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen \
+    && dpkg-reconfigure --frontend=noninteractive locales \
     && rm -rf /var/lib/apt/lists/* 
+
+ENV LANG=en_US.UTF-8
+ENV LANGUAGE=en_US:en
+ENV LC_ALL=en_US.UTF-8
 
 WORKDIR /app
 
