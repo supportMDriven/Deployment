@@ -76,6 +76,12 @@ if [ -d "/app_temp" ]; then
     rm -rf /app_temp
 fi
 
+# Check if PwdReset file exists
+if [ -f "/pwdreset/PwdReset.txt" ]; then
+    echo "Copying PwdReset..."
+    cp /pwdreset/PwdReset.txt /app/App_Data/
+fi
+
 # ---------------------------------------------------------
 # 3. Starting Application
 # ---------------------------------------------------------
