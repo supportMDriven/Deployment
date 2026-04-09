@@ -35,7 +35,7 @@ services:
         source: MDSData
         target: /app
 
-      ## Uncomment to reset User a password
+      ## Uncomment to reset User 'a' password
       # - type: bind
       #   source: ${PROJECT_ROOT:-.}/settings/mdriven-server/PwdReset.txt
       #   target: /pwdreset/PwdReset.txt

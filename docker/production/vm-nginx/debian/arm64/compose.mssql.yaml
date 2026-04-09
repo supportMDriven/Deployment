@@ -39,7 +39,7 @@ services:
         source: ${PROJECT_ROOT:-.}/settings/mdriven-server/CommandLineOverride.xml
         target: /app/App_Data/CommandLineOverride.xml
       
-      ## Uncomment to reset User a password
+      ## Uncomment to reset User 'a' password
       # - type: bind
       #   source: ${PROJECT_ROOT:-.}/settings/mdriven-server/PwdReset.txt
       #   target: /pwdreset/PwdReset.txt
