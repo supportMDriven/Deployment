@@ -2,9 +2,9 @@ name: MDriven
 
 services:
   server-core:
-    platform: linux/arm64
-    image: mdriven/mdriven-server:debian-arm64
-    
+    platform: linux/amd64
+    image: mdriven/mdriven-server:ubuntu-amd64
+
     volumes:
       - type: volume
         source: MDSData
@@ -24,7 +24,7 @@ services:
         target: /app/App_Data/DatabaseVistaDB.vdb6
     
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:5011/"]
+      test: ["CMD", "curl", "-f", "http://localhost/__MDrivenServer"]
       interval: 10s
       timeout: 10s
       retries: 5
@@ -43,9 +43,9 @@ services:
 
 
   turnkey-core:
-    platform: linux/arm64
-    image: mdriven/mdriven-turnkey:debian-arm64
-
+    platform: linux/amd64
+    image: mdriven/mdriven-turnkey:ubuntu-amd64
+    
     volumes:
       - type: volume
         source: MDTData
@@ -73,7 +73,7 @@ services:
         restart: true
 
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:5012/"]
+      test: ["CMD", "curl", "-f", "http://localhost/"]
       interval: 10s
       timeout: 10s
       retries: 5
@@ -112,7 +112,7 @@ services:
         source: MDTData
         target: /config/workspace/MDrivenTurnkey
         read_only: false
-
+      
       ## Uncomment for stricter file manager and terminal permissions
       # - type: bind
       #   source: ${PROJECT_ROOT:-.}/settings/vscode/.config
@@ -155,9 +155,7 @@ services:
         restart: true
     
     ports:
-      - 5011:5011
-      - 5012:5012
-      - 8080:8080
+      - 80:80
 
 volumes:
   MDSData:

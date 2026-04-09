@@ -13,6 +13,12 @@ services:
         source: MDSData
         target: /app
 
+      ## Uncomment to reset User a password
+      # - type: bind
+      #   source: ${PROJECT_ROOT:-.}/settings/mdriven-server/PwdReset.txt
+      #   target: /pwdreset/PwdReset.txt
+
+
       - type: bind
         source: ${SETTINGS_PATH:-.}/settings/mdriven-server/CommandLineOverride.xml
         target: /app/App_Data/CommandLineOverride.xml
@@ -23,6 +29,11 @@ services:
     
     ports:
       - 5011:5011
+
+    environment:
+      - PUID=1000
+      - PGID=1000
+      # - UPDATE_APP=true # set true for latest version or yyyymmdd for specific version
 
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:5011/"]
@@ -68,6 +79,11 @@ services:
     
     ports:
       - 5012:5012
+
+    environment:
+      - PUID=1000
+      - PGID=1000
+      # - UPDATE_APP=true # set true for latest version or yyyymmdd for specific version
     
     depends_on:
       server-core:

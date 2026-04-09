@@ -1,0 +1,7 @@
+<root>
+  <arg>port=80</arg>  // only when you run locally
+  <arg>nohttps</arg>    // remove to have https
+  <arg>pathtoapp=/__MDrivenServer</arg>
+  <!-- <arg>host=localhost</arg>   // only when you run locally -->
+ <!-- <arg>iis=https://localhost/TKDebug</arg> // probably the only param you send for IIS hosting  -->
+</root>

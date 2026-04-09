@@ -10,6 +10,11 @@ services:
         source: MDSData
         target: /app
 
+      ## Uncomment to reset User a password
+      # - type: bind
+      #   source: ${PROJECT_ROOT:-.}/settings/mdriven-server/PwdReset.txt
+      #   target: /pwdreset/PwdReset.txt
+      
       - type: bind
         source: ${PROJECT_ROOT:-.}/settings/mdriven-server/CommandLineOverride.xml
         target: /app/App_Data/CommandLineOverride.xml
@@ -28,6 +33,7 @@ services:
     environment:
       - PUID=1000
       - PGID=1000
+      # - UPDATE_APP=true # set true for latest version or yyyymmdd for specific version
     
     restart: on-failure:5
 
@@ -76,6 +82,7 @@ services:
     environment:
       - PUID=1000
       - PGID=1000
+      # - UPDATE_APP=true # set true for latest version or yyyymmdd for specific version
     
     restart: on-failure:5
 

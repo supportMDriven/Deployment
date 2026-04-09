@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+    <ApplicationName>Local Turnkey Core</ApplicationName>
+
+    <ShowDebugInfo>True</ShowDebugInfo>
+    <AttackBreakThreshold>100000</AttackBreakThreshold>
+    <NumberOfTurnkeyEcoSpacesToKeepWhenFree>100</NumberOfTurnkeyEcoSpacesToKeepWhenFree>
+</root>
