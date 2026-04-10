@@ -10,7 +10,7 @@ services:
       - ${PROJECT_ROOT:-.}/databases/mysql/mysql.env
 
     volumes:
-      - ./mysqldata:/var/lib/mysql
+      - ./mysql-data:/var/lib/mysql
       - ${PROJECT_ROOT:-.}/databases/mysql/init:/docker-entrypoint-initdb.d:ro
 
     healthcheck:
