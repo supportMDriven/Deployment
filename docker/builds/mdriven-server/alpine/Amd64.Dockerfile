@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 
-FROM mcr.microsoft.com/dotnet/sdk:8.0-alpine-amd64
+FROM mcr.microsoft.com/dotnet/sdk:10.0-alpine-amd64
 
 RUN apk add --upgrade --no-cache \
         curl \

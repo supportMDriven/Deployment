@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 
-FROM mcr.microsoft.com/dotnet/sdk:8.0-bookworm-slim-amd64
+FROM mcr.microsoft.com/dotnet/sdk:9.0-bookworm-slim-amd64
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
