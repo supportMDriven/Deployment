@@ -4,7 +4,7 @@ services:
   
   mysql: # MDriven Server Connection String  --- Server=mysql;port=3306;Database=mdriven_db;Uid=mdriven;Pwd=123456;
     image: mysql:8.0
-    restart: on-failure:5
+    restart: unless-stopped
     
     env_file:
       - ${PROJECT_ROOT:-.}/databases/mysql/mysql.env
@@ -59,7 +59,7 @@ services:
       - PGID=1000
       # - UPDATE_APP=true # set true for latest version or yyyymmdd for specific version
 
-    restart: on-failure:5
+    restart: unless-stopped
 
     entrypoint: ["/bin/sh","/usr/local/bin/entrypoint.sh"]
 
@@ -108,7 +108,7 @@ services:
       - PGID=1000
       # - UPDATE_APP=true # set true for latest version or yyyymmdd for specific version
 
-    restart: on-failure:5
+    restart: unless-stopped
 
     entrypoint: ["/bin/sh","/usr/local/bin/entrypoint.sh"]
 

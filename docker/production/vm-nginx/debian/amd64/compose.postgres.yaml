@@ -3,7 +3,7 @@ name: MDriven
 services:
   postgres: # MDriven Server Connection String  --- Server=postgres;port=5432;Database=mdriven_db;Uid=mdriven;Pwd=123456;
     image: postgres:16
-    restart: on-failure:5
+    restart: unless-stopped
     
     env_file:
       - ${PROJECT_ROOT:-.}/databases/postgres/postgres.env
@@ -58,7 +58,7 @@ services:
       - PGID=1000
       # - UPDATE_APP=true # set true for latest version or yyyymmdd for specific version
     
-    restart: on-failure:5
+    restart: unless-stopped
 
     entrypoint: ["/bin/sh","/usr/local/bin/entrypoint.sh"]
 
@@ -107,7 +107,7 @@ services:
       - PGID=1000
       # - UPDATE_APP=true # set true for latest version or yyyymmdd for specific version
     
-    restart: on-failure:5
+    restart: unless-stopped
 
     entrypoint: ["/bin/sh","/usr/local/bin/entrypoint.sh"]
 

@@ -3,7 +3,7 @@ name: MDriven
 services:
   mssql: # MDriven Server Connection String  --- Server=mssql,1433;Initial Catalog=mdriven_db;Persist Security Info=False;User ID=mdriven;Password=#MDs123456;MultipleActiveResultSets=False;Encrypt=False;TrustServerCertificate=False;Command Timeout=30;
     image: mcr.microsoft.com/mssql/server:2022-latest
-    restart: on-failure:5
+    restart: unless-stopped
 
     env_file:
       - ${PROJECT_ROOT:-.}/databases/mssql/mssql.env
@@ -14,9 +14,6 @@ services:
       - ${PROJECT_ROOT:-.}/databases/mssql/init:/usr/config:ro
 
     entrypoint: ["/bin/sh","/usr/config/entrypoint.sh"]
-
-    ports:
-      - 1433:1433
       
     healthcheck:
       test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P $$MSSQL_SA_PASSWORD -No -C -Q 'SELECT 1' || exit 1"]
@@ -65,7 +62,7 @@ services:
       - PGID=1000
       # - UPDATE_APP=true # set true for latest version or yyyymmdd for specific version
     
-    restart: on-failure:5
+    restart: unless-stopped
 
     entrypoint: ["/bin/sh","/usr/local/bin/entrypoint.sh"]
 
@@ -114,7 +111,7 @@ services:
       - PGID=1000
       # - UPDATE_APP=true # set true for latest version or yyyymmdd for specific version
     
-    restart: on-failure:5
+    restart: unless-stopped
 
     entrypoint: ["/bin/sh","/usr/local/bin/entrypoint.sh"]
 
