@@ -13,19 +13,9 @@ services:
         source: MDSData
         target: /app
 
-      ## Uncomment to reset User 'a' password
-      # - type: bind
-      #   source: ${PROJECT_ROOT:-.}/settings/mdriven-server/PwdReset.txt
-      #   target: /pwdreset/PwdReset.txt
-
-
       - type: bind
-        source: ${SETTINGS_PATH:-.}/settings/mdriven-server/CommandLineOverride.xml
-        target: /app/App_Data/CommandLineOverride.xml
-      
-      - type: bind
-        source: ${SETTINGS_PATH:-.}/settings/mdriven-server/DatabaseVistaDB.vdb6
-        target: /app/App_Data/DatabaseVistaDB.vdb6
+        source: ${SETTINGS_PATH:-.}/settings/mdriven-server/
+        target: /app/App_Data/
     
     ports:
       - 5011:5011

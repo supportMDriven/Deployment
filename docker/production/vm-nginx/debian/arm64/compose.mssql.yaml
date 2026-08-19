@@ -33,17 +33,8 @@ services:
         target: /app
 
       - type: bind
-        source: ${PROJECT_ROOT:-.}/settings/mdriven-server/CommandLineOverride.xml
-        target: /app/App_Data/CommandLineOverride.xml
-      
-      ## Uncomment to reset User 'a' password
-      # - type: bind
-      #   source: ${PROJECT_ROOT:-.}/settings/mdriven-server/PwdReset.txt
-      #   target: /pwdreset/PwdReset.txt
-            
-      - type: bind
-        source: ${PROJECT_ROOT:-.}/settings/mdriven-server/DatabaseVistaDB.vdb6
-        target: /app/App_Data/DatabaseVistaDB.vdb6
+        source: ${PROJECT_ROOT:-.}/settings/mdriven-server/
+        target: /app/App_Data/
 
     depends_on:
       mssql:
